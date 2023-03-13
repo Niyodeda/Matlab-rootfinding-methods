@@ -1,0 +1,78 @@
+% Course: Math*2130 Numerical Methods
+% Name: Adedoyin Adelabu
+% Student Number: 1196599
+
+clear;
+clc;
+  a=1;
+  b=20;
+  p=6;
+  err = 1e-4;
+  function y = f(x)
+    y = ((9.81*80/x)*(1-exp(-(x/80)*10)))-50; % Setting up the function in an alternate way to restrictions of symbolic functions in octave
+  endfunction
+
+ [cd] = Bisection(@f,a,b,err); % function call for bisection method
+  printf("cd = %.6d\n" ,cd) %.d is used to round to 6 significant figures.
+  a=1;
+  b=15;
+ [cd,length] = Falsi(@f,a,b,p);
+ printf("cd = %.6d\n" ,cd)
+ printf("length of interval = %d\n\n" ,length)
+
+ function y = g(x)
+    y = (x^10)-1;
+  endfunction
+
+  a=0;
+  b=1.3;
+  err=1e-2;
+  r=1;
+ [A_err,T_err,root] = Bisection2(@g,a,b,err,r); %modified Bisection and falsi method call to include Apporoximate and True error. Labeled as A_err and T_err
+ printf("root = %.2d\n" ,root)
+ disp(' ')
+  p=2;
+  r=1;
+ [Aerr,Terr,root] = Falsi2(@g,a,b,p,r);
+ printf("root = %.2d\n" ,root)
+ disp(' ')
+
+
+function y = h(x)
+    y = exp(1e-12*x+1e-7)-x-1;
+endfunction
+
+function y = dh(x)
+    y = (exp((x+1e5)/1e12)/1e12)-1; % Derivative of h(x) defined to bypass restriction of using symbolic function
+  endfunction
+  p=8;
+
+  [root] = Secant(@h,(2.3e+13),(2.6e+13),p,5); %2.3e13 and 2.6e13 are both left of the point where X* =0;
+  printf("Left root approximation = %.8d\n" ,root)
+  [root] = Secant(@h,(2.8e+13),(2.9e+13),p,50); %2.8e13 and 2.9e13 are both left of the point where X* =0;
+  printf("Right root approximation = %.8d\n" ,root)
+   disp(' ')
+
+
+  [root] = Newtons(@h,@dh,(2.6e+13),p,3); %2.6e13 is left of the point where X* =0;
+  printf("Left root approximation = %.8d\n" ,root)
+  [root] = Newtons(@h,@dh,(2.9e+13),p,50); %2.9e13 is right of the point where X* =0;
+  printf("Right root approximation = %.8d\n\n" ,root)
+
+  [root]= FixedPoint(@h,0,p,50);
+  printf("Left root approximation = %.8d\n" ,root)
+
+  function y = hi(x)
+    y = 10^12*log(10^12*(x+1))-100000; %inverse of H(x) because if fixed point method diverges for h(x) it will converge for H(x) inverse when it falls within the same bounds.
+endfunction
+
+  [root]= FixedPoint2(@hi,(2.78e13),p,1) %2.78 is right of the value where r =0.
+  printf("Right root approximation = %.8d\n" ,root)
+
+
+
+
+
+
+
+
